@@ -21,10 +21,10 @@ import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.core.content.ContextCompat;
 
-import com.afollestad.materialdialogs.AlertDialogWrapper;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -184,7 +184,7 @@ public class Submit extends BaseActivity {
                                 }
                                 if (s.getSubredditType().equals("RESTRICTED")) {
                                     subredditText.setText("");
-                                    new AlertDialogWrapper.Builder(Submit.this).setTitle(
+                                    new AlertDialog.Builder(Submit.this).setTitle(
                                             R.string.err_submit_restricted)
                                             .setMessage(R.string.err_submit_restricted_text)
                                             .setPositiveButton(R.string.btn_ok, null)
@@ -257,7 +257,7 @@ public class Submit extends BaseActivity {
                             d.dismiss();
                         } else {
                             d.dismiss();
-                            new AlertDialogWrapper.Builder(Submit.this).setTitle(
+                            new AlertDialog.Builder(Submit.this).setTitle(
                                     R.string.title_not_found)
                                     .setPositiveButton(R.string.btn_ok, null)
                                     .show();
@@ -569,7 +569,7 @@ public class Submit extends BaseActivity {
                 setImage(url);
 
             } catch (Exception e) {
-                new AlertDialogWrapper.Builder(c).setTitle(R.string.err_title)
+                new AlertDialog.Builder(c).setTitle(R.string.err_title)
                         .setMessage(R.string.editor_err_msg)
                         .setPositiveButton(R.string.btn_ok, new DialogInterface.OnClickListener() {
                             @Override
@@ -626,7 +626,7 @@ public class Submit extends BaseActivity {
                 link.setVisibility(View.VISIBLE);
                 ((EditText) findViewById(R.id.urltext)).setText(finalUrl);
             } catch (Exception e) {
-                new AlertDialogWrapper.Builder(c).setTitle(R.string.err_title)
+                new AlertDialog.Builder(c).setTitle(R.string.err_title)
                         .setMessage(R.string.editor_err_msg)
                         .setPositiveButton(R.string.btn_ok, new DialogInterface.OnClickListener() {
                             @Override
@@ -640,7 +640,7 @@ public class Submit extends BaseActivity {
     }
 
     private void showErrorRetryDialog(String message) {
-        new AlertDialogWrapper.Builder(Submit.this).setTitle(R.string.err_title)
+        new AlertDialog.Builder(Submit.this).setTitle(R.string.err_title)
                 .setMessage(message)
                 .setNegativeButton(R.string.btn_no, new DialogInterface.OnClickListener() {
                     @Override
