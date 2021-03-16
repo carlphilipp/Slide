@@ -13,7 +13,6 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
@@ -23,7 +22,6 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.SwitchCompat;
-import androidx.core.content.ContextCompat;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -53,6 +51,7 @@ import me.ccrama.redditslide.UserSubscriptions;
 import me.ccrama.redditslide.Views.CommentOverflow;
 import me.ccrama.redditslide.Views.DoEditorActions;
 import me.ccrama.redditslide.Views.ImageInsertEditText;
+import me.ccrama.redditslide.util.KeyboardUtil;
 import me.ccrama.redditslide.util.SubmissionParser;
 import me.ccrama.redditslide.util.TitleExtractor;
 
@@ -277,11 +276,7 @@ public class Submit extends BaseActivity {
                                 .create();
 
                 tedBottomPicker.show(getSupportFragmentManager());
-                InputMethodManager imm =
-                        ContextCompat.getSystemService(Submit.this, InputMethodManager.class);
-                if (imm != null) {
-                    imm.hideSoftInputFromWindow(findViewById(R.id.bodytext).getWindowToken(), 0);
-                }
+                KeyboardUtil.hideKeyboard(Submit.this, findViewById(R.id.bodytext).getWindowToken(), 0);
             }
         });
 
