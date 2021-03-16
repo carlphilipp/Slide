@@ -96,6 +96,7 @@ import me.ccrama.redditslide.Views.PreCachingLayoutManagerComments;
 import me.ccrama.redditslide.Visuals.FontPreferences;
 import me.ccrama.redditslide.Visuals.Palette;
 import me.ccrama.redditslide.Vote;
+import me.ccrama.redditslide.util.AnimatorUtil;
 import me.ccrama.redditslide.util.DisplayUtil;
 import me.ccrama.redditslide.util.KeyboardUtil;
 import me.ccrama.redditslide.util.LogUtil;
@@ -860,27 +861,10 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     int editingPosition;
 
-    private ValueAnimator slideAnimator(int start, int end, final View v) {
-        ValueAnimator animator = ValueAnimator.ofInt(start, end);
-        animator.setInterpolator(new FastOutSlowInInterpolator());
-
-        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                //Update Height
-                int value = (Integer) valueAnimator.getAnimatedValue();
-                ViewGroup.LayoutParams layoutParams = v.getLayoutParams();
-                layoutParams.height = value;
-                v.setLayoutParams(layoutParams);
-            }
-        });
-        return animator;
-    }
-
     private void collapseAndHide(final View v) {
         int finalHeight = v.getHeight();
 
-        mAnimator = slideAnimator(finalHeight, 0, v);
+        mAnimator = AnimatorUtil.slideAnimator(finalHeight, 0, v);
 
         mAnimator.addListener(new AnimatorListenerAdapter() {
             @Override
@@ -900,7 +884,7 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     private void collapseAndRemove(final View v) {
         int finalHeight = v.getHeight();
 
-        mAnimator = slideAnimator(finalHeight, 0, v);
+        mAnimator = AnimatorUtil.slideAnimator(finalHeight, 0, v);
 
         mAnimator.addListener(new AnimatorListenerAdapter() {
             @Override
@@ -929,7 +913,7 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         final int widthSpec2 = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
         final int heightSpec2 = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
         l2.measure(widthSpec2, heightSpec2);
-        ValueAnimator mAnimator = slideAnimator(l.getMeasuredHeight(), l2.getMeasuredHeight(), l);
+        ValueAnimator mAnimator = AnimatorUtil.slideAnimator(l.getMeasuredHeight(), l2.getMeasuredHeight(), l);
 
         mAnimator.addListener(new AnimatorListenerAdapter() {
             @Override
@@ -960,7 +944,7 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         final int heightSpec2 = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
         l2.measure(widthSpec2, heightSpec2);
 
-        mAnimator = slideAnimator(0, l.getMeasuredHeight() - l2.getMeasuredHeight(), l);
+        mAnimator = AnimatorUtil.slideAnimator(0, l.getMeasuredHeight() - l2.getMeasuredHeight(), l);
 
         mAnimator.start();
     }
@@ -978,7 +962,7 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         final int heightSpec2 = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
         l2.measure(widthSpec2, heightSpec2);
 
-        mAnimator = slideAnimator((l.getMeasuredHeight() - l2.getMeasuredHeight()),
+        mAnimator = AnimatorUtil.slideAnimator((l.getMeasuredHeight() - l2.getMeasuredHeight()),
                 l.getMeasuredHeight() - (l.getMeasuredHeight() - l2.getMeasuredHeight()), l);
 
         mAnimator.addListener(new AnimatorListenerAdapter() {
@@ -1010,7 +994,7 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         final int heightSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
         l.measure(widthSpec, heightSpec);
 
-        mAnimator = slideAnimator(0, l.getMeasuredHeight(), l);
+        mAnimator = AnimatorUtil.slideAnimator(0, l.getMeasuredHeight(), l);
 
         mAnimator.addListener(new AnimatorListenerAdapter() {
             @Override

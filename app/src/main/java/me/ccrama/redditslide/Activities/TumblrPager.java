@@ -49,11 +49,8 @@ import com.nostra13.universalimageloader.core.listener.ImageLoadingProgressListe
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import java.io.File;
-import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URL;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -75,6 +72,7 @@ import me.ccrama.redditslide.Views.SubsamplingScaleImageView;
 import me.ccrama.redditslide.Views.ToolbarColorizeHelper;
 import me.ccrama.redditslide.Visuals.ColorPreferences;
 import me.ccrama.redditslide.Visuals.FontPreferences;
+import me.ccrama.redditslide.util.FileUtil;
 import me.ccrama.redditslide.util.GifUtils;
 import me.ccrama.redditslide.util.LinkUtil;
 import me.ccrama.redditslide.util.NetworkUtil;
@@ -480,7 +478,7 @@ public class TumblrPager extends FullScreenActivity
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                Bundle savedInstanceState) {
+                                 Bundle savedInstanceState) {
             final ViewGroup rootView =
                     (ViewGroup) inflater.inflate(R.layout.album_image_pager, container, false);
 
@@ -489,8 +487,8 @@ public class TumblrPager extends FullScreenActivity
             boolean lq = false;
             if (SettingValues.loadImageLq && (SettingValues.lowResAlways
                     || (!NetworkUtil.isConnectedWifi(getActivity())
-                    && SettingValues.lowResMobile)) && current.getAltSizes()!= null&&! current.getAltSizes().isEmpty()) {
-                String lqurl = current.getAltSizes().get(current.getAltSizes().size()/2).getUrl();
+                    && SettingValues.lowResMobile)) && current.getAltSizes() != null && !current.getAltSizes().isEmpty()) {
+                String lqurl = current.getAltSizes().get(current.getAltSizes().size() / 2).getUrl();
                 loadImage(rootView, this, lqurl);
                 lq = true;
             } else {
@@ -532,12 +530,12 @@ public class TumblrPager extends FullScreenActivity
                     rootView.findViewById(R.id.panel).setVisibility(View.GONE);
                     (rootView.findViewById(R.id.margin)).setPadding(0, 0, 0, 0);
                 } else if (title.isEmpty()) {
-                    setTextWithLinks(description,
+                    LinkUtil.setTextWithLinks(description,
                             rootView.findViewById(R.id.title));
                 } else {
-                    setTextWithLinks(title,
+                    LinkUtil.setTextWithLinks(title,
                             rootView.findViewById(R.id.title));
-                    setTextWithLinks(description,
+                    LinkUtil.setTextWithLinks(description,
                             rootView.findViewById(R.id.body));
                 }
                 {
@@ -608,32 +606,9 @@ public class TumblrPager extends FullScreenActivity
         }
     }
 
-    public static void setTextWithLinks(String s, SpoilerRobotoTextView text) {
-        String[] parts = s.split("\\s+");
-
-        StringBuilder b = new StringBuilder();
-        for (String item : parts)
-            try {
-                URL url = new URL(item);
-                b.append(" <a href=\"").append(url).append("\">").append(url).append("</a>");
-            } catch (MalformedURLException e) {
-                b.append(" ").append(item);
-            }
-
-        text.setTextHtml(b.toString(), "no sub");
-    }
-
-    public static String readableFileSize(long size) {
-        if (size <= 0) return "0";
-        final String[] units = new String[]{"B", "kB", "MB", "GB", "TB"};
-        int digitGroups = (int) (Math.log10(size) / Math.log10(1024));
-        return new DecimalFormat("#,##0.#").format(size / Math.pow(1024, digitGroups))
-                + " "
-                + units[digitGroups];
-    }
-
     private static void loadImage(final View rootView, Fragment f, String url) {
         final SubsamplingScaleImageView image = rootView.findViewById(R.id.image);
+
         image.setMinimumDpi(70);
         image.setMinimumTileDpi(240);
         ImageView fakeImage = new ImageView(f.getActivity());
@@ -656,14 +631,14 @@ public class TumblrPager extends FullScreenActivity
 
                             @Override
                             public void onLoadingFailed(String imageUri, View view,
-                                    FailReason failReason) {
+                                                        FailReason failReason) {
                                 Log.v("Slide", "LOADING FAILED");
 
                             }
 
                             @Override
                             public void onLoadingComplete(String imageUri, View view,
-                                    Bitmap loadedImage) {
+                                                          Bitmap loadedImage) {
                                 size.setVisibility(View.GONE);
                                 image.setImage(ImageSource.bitmap(loadedImage));
                                 (rootView.findViewById(R.id.progress)).setVisibility(View.GONE);
@@ -677,8 +652,8 @@ public class TumblrPager extends FullScreenActivity
                         }, new ImageLoadingProgressListener() {
                             @Override
                             public void onProgressUpdate(String imageUri, View view, int current,
-                                    int total) {
-                                size.setText(readableFileSize(total));
+                                                         int total) {
+                                size.setText(FileUtil.readableFileSize(total));
 
                                 ((ProgressBar) rootView.findViewById(R.id.progress)).setProgress(
                                         Math.round(100.0f * current / total));
